@@ -15,7 +15,7 @@ const publicLinks = [
 export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
-  const { theme, setTheme } = useTheme();
+  const { resolvedTheme, setTheme } = useTheme();
   const { data: session, isPending } = useSession();
   const [open, setOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -60,11 +60,13 @@ export default function Navbar() {
             </Link>
           ))}
           <button
-            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
             className="rounded-full border p-2 hover:bg-slate-100 dark:hover:bg-white/10"
             aria-label="Toggle theme"
           >
-            {theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
+            {/* Pick the icon in CSS so server and client markup match */}
+            <Sun size={16} className="hidden dark:block" />
+            <Moon size={16} className="dark:hidden" />
           </button>
           {!isPending && !user && (
             <Link
@@ -134,11 +136,13 @@ export default function Navbar() {
 
         <div className="flex items-center gap-2 md:hidden">
           <button
-            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
             className="rounded-full border p-2"
             aria-label="Toggle theme"
           >
-            {theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
+            {/* Pick the icon in CSS so server and client markup match */}
+            <Sun size={16} className="hidden dark:block" />
+            <Moon size={16} className="dark:hidden" />
           </button>
           <button onClick={() => setOpen((v) => !v)} className="rounded-lg border p-2" aria-label="Menu">
             {open ? <X size={18} /> : <Menu size={18} />}
