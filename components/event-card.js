@@ -35,9 +35,9 @@ export default function EventCard({ event }) {
         <p className="line-clamp-2 text-sm text-slate-600 dark:text-slate-300">{event.description}</p>
         <Link
           href={`/events/${event._id}`}
-          className="mt-auto rounded-full bg-[#3569E8] px-4 py-2 pt-2 text-center font-display text-sm font-semibold text-white hover:bg-[#254fc0]"
+          className="mt-auto rounded-full bg-[#3569E8] px-4 py-2 text-center font-display text-sm font-semibold text-white hover:bg-[#254fc0]"
         >
-          <span className="mt-2 inline-block">View Details</span>
+          View Event
         </Link>
       </div>
     </motion.article>

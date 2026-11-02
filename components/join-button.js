@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useSession } from "@/lib/auth-client";
@@ -11,6 +11,21 @@ export default function JoinButton({ eventId, isJoined: initial, participantCoun
   const { data: session, isPending } = useSession();
   const [joined, setJoined] = useState(initial);
   const [loading, setLoading] = useState(false);
+
+  // The details page renders on the server without the user's token,
+  // so re-check join status from the browser once the session is known.
+  useEffect(() => {
+    if (isPending || !session?.user) return;
+    let cancelled = false;
+    apiFetch(`/api/events/${eventId}`, { auth: true })
+      .then((e) => {
+        if (!cancelled && e?.isJoined) setJoined(true);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [isPending, session, eventId]);
 
   async function join() {
     if (!session?.user) {
