@@ -8,7 +8,7 @@ const GALLERY = [
   { src: "https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=600&q=80", alt: "Volunteers packing food" },
   { src: "https://images.unsplash.com/photo-1593113598332-cd288d649433?w=600&q=80", alt: "Community cleanup" },
   { src: "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=600&q=80", alt: "Helping hands" },
-  { src: "https://images.unsplash.com/photo-1509099836633-18ba1795216d?w=600&q=80", alt: "Plantation drive" },
+  { src: "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=600&q=80", alt: "Plantation drive" },
 ];
 
 export default function Home() {
