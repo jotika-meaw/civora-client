@@ -1,36 +1,27 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# CIVORA Client
 
-## Getting Started
+Next.js App Router frontend for CIVORA.
 
-First, run the development server:
-
+## Setup
 ```bash
+cp .env.example .env.local
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Env:
+- `NEXT_PUBLIC_API_URL` — Express URL
+- `NEXT_PUBLIC_APP_URL` / `BETTER_AUTH_URL` — this app URL
+- `MONGODB_URI` — same DB as server (Better Auth `user` collection)
+- `BETTER_AUTH_SECRET` — min 32 chars, shared with server fallback
+- `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`
+- `JWT_ISSUER`, `JWT_AUDIENCE` — must match server
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## Routes
+`/`, `/login`, `/register`, `/events`, `/events/[id]`, `/create-event`, `/manage-events`, `/joined-events`, `/profile`
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Backend JWTs come from `GET /api/auth/token`; Express verifies via JWKS at `/api/auth/jwks` (or `BETTER_AUTH_SECRET` fallback locally).
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Deploy (Vercel)
+- Set all env vars in Vercel
+- Set server `CLIENT_URL` + `BETTER_AUTH_JWKS_URL=https://<vercel-domain>/api/auth/jwks`
