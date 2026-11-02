@@ -80,12 +80,15 @@ export default function Navbar() {
                 onClick={() => setMenuOpen((v) => !v)}
                 className="flex items-center gap-2 rounded-full border p-1 pr-3 hover:bg-slate-100 dark:hover:bg-white/10"
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={user.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name || user.email || "C")}`}
-                  alt="profile"
-                  className="h-8 w-8 rounded-full object-cover"
-                />
+                <span className="tooltip tooltip-bottom" data-tip={user.name || user.email}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={user.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name || user.email || "C")}`}
+                    alt={user.name || "profile"}
+                    title={user.name || user.email}
+                    className="h-8 w-8 rounded-full object-cover"
+                  />
+                </span>
                 <span className="max-w-28 truncate text-sm font-medium">{user.name || user.email}</span>
               </button>
               {menuOpen && (
@@ -118,6 +121,14 @@ export default function Navbar() {
                 </div>
               )}
             </div>
+          )}
+          {!isPending && user && (
+            <button
+              onClick={handleLogout}
+              className="rounded-full border border-[#3569E8] px-5 py-2 font-display font-semibold text-[#3569E8] hover:bg-[#3569E8] hover:text-white"
+            >
+              Logout
+            </button>
           )}
         </div>
 
