@@ -3,34 +3,29 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { useSession } from "@/lib/auth-client";
 import { apiFetch } from "@/lib/api";
 import { CATEGORIES } from "@/lib/constants";
-
-const schema = z.object({
-  title: z.string().min(3).max(120),
-  description: z.string().min(10).max(5000),
-  category: z.enum(CATEGORIES),
-  image: z.string().url("Image must be a valid URL"),
-  location: z.string().min(2).max(160),
-  eventDate: z.string().refine((v) => new Date(v).getTime() > Date.now(), "Pick a future date"),
-});
+import { eventSchema, toISO, minLocalInput } from "@/lib/event-schema";
 
 export default function CreateEventPage() {
   const router = useRouter();
   const { data: session, isPending } = useSession();
   const [loading, setLoading] = useState(false);
-  const { register, handleSubmit, formState: { errors } } = useForm({ resolver: zodResolver(schema) });
+  const { register, handleSubmit, formState: { errors } } = useForm({ resolver: zodResolver(eventSchema) });
 
   async function onSubmit(values) {
     setLoading(true);
     try {
-      const created = await apiFetch("/api/events", { method: "POST", auth: true, body: values });
-      toast.success("Event created");
-      router.push(`/events/${created._id}`);
+      await apiFetch("/api/events", {
+        method: "POST",
+        auth: true,
+        body: { ...values, eventDate: toISO(values.eventDate) },
+      });
+      toast.success("Event created successfully");
+      router.push("/events");
     } catch (err) {
       toast.error(err.message);
     } finally {
@@ -59,7 +54,7 @@ export default function CreateEventPage() {
             <option value="" disabled>Select category</option>
             {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
           </select>
-          <input {...register("eventDate")} type="datetime-local" className={input} />
+          <input {...register("eventDate")} type="datetime-local" min={minLocalInput()} className={input} />
         </div>
         {(errors.category || errors.eventDate) && <p className="text-xs text-red-500">{errors.category?.message || errors.eventDate?.message}</p>}
         <input {...register("image")} placeholder="Image URL https://..." className={input} />
