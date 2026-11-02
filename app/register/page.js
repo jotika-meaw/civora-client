@@ -10,10 +10,14 @@ import { toast } from "sonner";
 import { signUp, signIn } from "@/lib/auth-client";
 
 const schema = z.object({
-  name: z.string().min(2).max(80),
-  email: z.string().email(),
-  image: z.string().url().optional().or(z.literal("")),
-  password: z.string().min(6),
+  name: z.string().trim().min(2, "Name must be at least 2 characters").max(80),
+  email: z.string().email("Enter a valid email"),
+  image: z.string().trim().url("Photo URL must be a valid URL"),
+  password: z
+    .string()
+    .min(6, "Password must be at least 6 characters")
+    .regex(/[A-Z]/, "Password must contain an uppercase letter")
+    .regex(/[a-z]/, "Password must contain a lowercase letter"),
 });
 
 export default function RegisterPage() {
@@ -30,7 +34,7 @@ export default function RegisterPage() {
         name: values.name,
         email: values.email,
         password: values.password,
-        image: values.image || undefined,
+        image: values.image,
       });
       if (res?.error) throw new Error(res.error.message || "Registration failed");
       toast.success("Account created — welcome to CIVORA");
@@ -62,11 +66,11 @@ export default function RegisterPage() {
             {errors.email && <p className="mt-1 text-xs text-red-500">{errors.email.message}</p>}
           </div>
           <div>
-            <input {...register("image")} placeholder="Photo URL (optional)" className="w-full rounded-2xl border px-4 py-2.5 text-sm outline-none focus:border-[#3569E8]" />
+            <input {...register("image")} placeholder="Photo URL" className="w-full rounded-2xl border px-4 py-2.5 text-sm outline-none focus:border-[#3569E8]" />
             {errors.image && <p className="mt-1 text-xs text-red-500">{errors.image.message}</p>}
           </div>
           <div>
-            <input {...register("password")} type="password" placeholder="Password (min 6)" className="w-full rounded-2xl border px-4 py-2.5 text-sm outline-none focus:border-[#3569E8]" />
+            <input {...register("password")} type="password" placeholder="Password (6+ chars, upper & lower case)" className="w-full rounded-2xl border px-4 py-2.5 text-sm outline-none focus:border-[#3569E8]" />
             {errors.password && <p className="mt-1 text-xs text-red-500">{errors.password.message}</p>}
           </div>
           <button disabled={loading} className="w-full rounded-full bg-[#3569E8] py-2.5 font-display font-semibold text-white hover:bg-[#254fc0] disabled:opacity-60">
