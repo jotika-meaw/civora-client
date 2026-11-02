@@ -1,4 +1,10 @@
 @import "tailwindcss";
+@plugin "daisyui" {
+  themes: light --default, dark;
+}
+
+/* Drive `dark:` utilities from the theme toggle (next-themes adds `.dark` to <html>) */
+@custom-variant dark (&:where(.dark, .dark *));
 
 :root {
   --background: #ffffff;
